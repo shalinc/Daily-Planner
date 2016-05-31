@@ -1,11 +1,48 @@
-$(document).ready(function(){
+$(document).ready(function() {
+    // AddTask Event
     $('#add-task-form').on('submit',function(e){
         addTask(e);
       });
     
+    displayTasks();
+    
+    //Function to display the tasks
+    function displayTasks(){
+        var taskList = JSON.parse(localStorage.getItem('tasks'));
+        //display task in sorted order
+        if(taskList != null){
+            taskList = taskList.sort(sortByTime);
+        }
+        
+        //loop through each task and display accordingly by sorting
+        var i = 0;
+        
+        //check tasks
+        if (localStorage.getItem('tasks') != null){
+            $.each(taskList, function(key, value){
+                $('#task-table').append('<tr id="' + value.id +'">' +
+                                        '<td>' + value.task + '</td>'+
+                                        '<td>' + value.task_priority + '</td>'+
+                                        '<td>' + value.task_date + '</td>'+
+                                        '<td>' + value.task_time + '</td>'+
+                                        '<td> <a href="edit.html?id=' + value.id + '">Edit</a> | <a href="#" id="remove-task">Remove</a></td>'+
+                                        '</tr>');
+            })
+        }
+        
+        //Function to sort Tasks
+        function sortByTime(a, b){
+            var aTime =  a.task_time;
+            var bTime = b.task_time;
+            
+            return((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
+        }
+        
+        
+    }
+    
     
     //Function to add a Task
-    
     function addTask(e){
         
         //get the Unique value i.e. the date with its timestamp
